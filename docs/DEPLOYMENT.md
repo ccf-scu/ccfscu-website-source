@@ -1,5 +1,15 @@
 # 部署与回滚
 
+## Workers 静态资源部署（2026-09-13）
+
+当前正式站点使用 Cloudflare Workers Static Assets，Worker 名称为 `ccf-scu-github-io`。下文早期 Pages 流程仅供历史参考，以本节为准。
+
+仓库根目录的 `wrangler.jsonc` 明确指定 `assets.directory: "./dist"`，不配置 `main`。Astro 保持 `output: "static"`，不安装或启用 `@astrojs/cloudflare`，不引入 SSR、Images 或 Session KV。独立 OAuth Worker 继续使用 `infrastructure/oauth-worker/wrangler.jsonc`。
+
+Workers Builds 从 `main` 构建，构建命令为 `npm run build`，部署命令为 `npx wrangler deploy`；两者均在仓库根目录执行。不依赖 Wrangler 自动推断框架或添加 adapter。
+
+本地使用 `npm ci` 安装锁定依赖，执行 `npm run validate`，再执行 `npx wrangler deploy --dry-run` 检查部署配置。仅从验证通过的 `main` 执行 `npx wrangler deploy` 发布正式站点。发布后核对站点内容和 Worker 版本；回滚使用该 Worker 上一个成功版本或 revert 后重新构建发布。
+
 ## 环境
 
 | 环境 | 来源 | 用途 | 是否影响生产 |
