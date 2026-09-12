@@ -1,5 +1,11 @@
 # 开发进度
 
+## 明确 Workers 纯静态部署（2026-09-13）
+
+- 根目录新增 `wrangler.jsonc`，绑定现有 Worker `ccf-scu-github-io`，只指定 `dist` 静态资源目录和兼容日期，不设置服务端入口。
+- 最新 `package.json`、lockfile 和 Astro 配置均无 Cloudflare adapter；保留已有纯静态配置、正式域名及路径选项，无需卸载依赖。
+- 部署文档明确构建与部署命令，以及站点和独立 OAuth Worker 配置的边界。`npm run validate` 通过（22 项测试、类型检查、内容校验、35 页静态构建、产物隔离校验）；Wrangler 4.131.1 的 `npx wrangler deploy --dry-run` 读取 243 个静态文件，报告无 bindings，预检通过。此次无页面样式或交互改动，未重复运行浏览器测试。
+
 ## CMS 内容归档阻断发布修复（2026-08-28）
 
 - 修复首页当前代表活动被归档时整站构建失败的问题：归档仍立即下架该活动，首页临时使用同类别中最新的未归档活动，不再连带阻断公告等其他已合并内容发布。
